@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Açaí House Delivery</title>
+    <meta
+      name="description"
+      content="Peça seu açaí na Açaí House Delivery e receba fresquinho na sua casa."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;800&family=Poppins:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container header-content">
+        <a class="logo" href="#inicio">🍇 Açaí House</a>
+        <button class="menu-toggle" id="menuToggle" aria-label="Abrir menu">☰</button>
+        <nav class="nav" id="mainNav">
+          <a href="#inicio">Início</a>
+          <a href="#cardapio">Cardápio</a>
+          <a href="#adicionais">Adicionais</a>
+          <a href="#contato">Contato</a>
+        </nav>
+        <button class="cart-trigger" id="openCart" aria-label="Abrir carrinho">
+          🛒 <span id="cartCount">0</span>
+        </button>
+      </div>
+    </header>
+
+    <main>
+      <section class="hero" id="inicio">
+        <div class="container hero-content">
+          <span class="badge">🕐 Aberto todos os dias 13h às 21h</span>
+          <h1>O melhor açaí chegou até você! 🍇</h1>
+          <p>Peça agora e receba fresquinho na sua casa</p>
+          <a href="#cardapio" class="btn btn-cta">Ver Cardápio</a>
+        </div>
+      </section>
+
+      <section class="section" id="cardapio">
+        <div class="container">
+          <h2>Nosso Cardápio</h2>
+          <div class="product-grid" id="productGrid"></div>
+        </div>
+      </section>
+
+      <section class="section extras-section" id="adicionais">
+        <div class="container">
+          <h2>Monte seu açaí!</h2>
+          <div class="extras-grid" id="extrasGrid"></div>
+        </div>
+      </section>
+
+      <section class="section contact" id="contato">
+        <div class="container">
+          <h2>Contato</h2>
+          <p>📱 WhatsApp: <a href="https://wa.me/5579999049167" target="_blank" rel="noopener">(79) 9 9904-9167</a></p>
+          <p>🕐 Horário: Domingo a domingo, 13h às 21h</p>
+          <p>📦 Entrega: Consulte a taxa de entrega pelo WhatsApp</p>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">© 2026 Açaí House Delivery</footer>
+
+    <a
+      class="whatsapp-float"
+      href="https://wa.me/5579999049167"
+      target="_blank"
+      rel="noopener"
+      aria-label="Falar no WhatsApp"
+      >💬</a
+    >
+
+    <div class="cart-overlay" id="cartOverlay"></div>
+    <aside class="cart-drawer" id="cartDrawer" aria-label="Carrinho de compras">
+      <div class="cart-header">
+        <h3>Seu carrinho</h3>
+        <button id="closeCart" aria-label="Fechar carrinho">✕</button>
+      </div>
+      <div class="cart-items" id="cartItems"></div>
+      <div class="cart-footer">
+        <p class="cart-total">Total: <strong id="cartTotal">R$ 0,00</strong></p>
+        <label for="orderNotes">Observações do pedido</label>
+        <textarea id="orderNotes" rows="3" placeholder="Ex: sem granola"></textarea>
+        <button class="btn btn-cta" id="orderButton">Fazer Pedido pelo WhatsApp</button>
+      </div>
+    </aside>
+
+    <script src="js/cart.js"></script>
+  </body>
+</html>
