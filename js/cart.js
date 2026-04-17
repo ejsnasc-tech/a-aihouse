@@ -234,8 +234,7 @@ function renderCart() {
 
   cartCountEl.textContent = String(totalItems);
   cartCountEl.classList.remove('bump');
-  void cartCountEl.offsetWidth;
-  cartCountEl.classList.add('bump');
+  window.requestAnimationFrame(() => cartCountEl.classList.add('bump'));
   cartTotalEl.textContent = formatCurrency(total);
 }
 
@@ -300,6 +299,7 @@ function loadState() {
       notes: typeof saved.notes === 'string' ? saved.notes : '',
     };
   } catch (error) {
+    console.warn('Não foi possível carregar carrinho salvo.', error);
     return { items: [], extras: [], notes: '' };
   }
 }
