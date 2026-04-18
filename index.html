@@ -19,12 +19,11 @@
   <body>
     <header class="site-header">
       <div class="container header-content">
-        <a class="logo" href="#inicio">🍇 Açaí House</a>
+        <a class="logo" href="#inicio"><img src="img/logo.jpg" alt="Açaí House Delivery" class="logo-img" /></a>
         <button class="menu-toggle" id="menuToggle" aria-label="Abrir menu">☰</button>
         <nav class="nav" id="mainNav">
           <a href="#inicio">Início</a>
           <a href="#cardapio">Cardápio</a>
-          <a href="#adicionais">Adicionais</a>
           <a href="#contato">Contato</a>
         </nav>
         <button class="cart-trigger" id="openCart" aria-label="Abrir carrinho">
@@ -36,8 +35,9 @@
     <main>
       <section class="hero" id="inicio">
         <div class="container hero-content">
-          <span class="badge">🕐 Aberto todos os dias 13h às 21h</span>
-          <h1>O melhor açaí chegou até você! 🍇</h1>
+          <img src="img/logo.jpg" alt="Açaí House Delivery" class="hero-logo" />
+          <span class="badge" id="heroBadge">🕐 Aberto todos os dias 13h às 21h</span>
+          <h1>O melhor açaí chegou até você!</h1>
           <p>Peça agora e receba fresquinho na sua casa</p>
           <a href="#cardapio" class="btn btn-cta">Ver Cardápio</a>
         </div>
@@ -45,32 +45,59 @@
 
       <section class="section" id="cardapio">
         <div class="container">
-          <h2>Nosso Cardápio</h2>
+          <h2>Monte Seu Açaí</h2>
+          <p class="section-subtitle">Escolha o tamanho e personalize do seu jeito!</p>
           <div class="product-grid" id="productGrid"></div>
-        </div>
-      </section>
-
-      <section class="section extras-section" id="adicionais">
-        <div class="container">
-          <h2>Monte seu açaí!</h2>
-          <div class="extras-grid" id="extrasGrid"></div>
         </div>
       </section>
 
       <section class="section contact" id="contato">
         <div class="container">
-          <h2>Contato</h2>
-          <p>📱 WhatsApp: <a href="https://wa.me/5579999049167" target="_blank" rel="noopener">(79) 9 9904-9167</a></p>
-          <p>🕐 Horário: Domingo a domingo, 13h às 21h</p>
-          <p>📦 Entrega: Consulte a taxa de entrega pelo WhatsApp</p>
+          <h2>Fale Conosco</h2>
+          <p class="section-subtitle">Estamos prontos para atender você!</p>
+
+          <div class="contact-grid">
+            <div class="contact-card">
+              <div class="contact-icon">📱</div>
+              <h3>WhatsApp</h3>
+              <p id="contactWhatsapp"><a href="https://wa.me/5579999049167" target="_blank" rel="noopener">(79) 9 9904-9167</a></p>
+              <a href="https://wa.me/5579999049167" target="_blank" rel="noopener" class="btn btn-whatsapp" id="contactWaBtn">Chamar no WhatsApp</a>
+            </div>
+            <div class="contact-card">
+              <div class="contact-icon">🕐</div>
+              <h3>Horário</h3>
+              <p id="contactHorario">Domingo a domingo</p>
+              <span class="contact-highlight" id="contactHorarioHora">13h às 21h</span>
+            </div>
+            <div class="contact-card">
+              <div class="contact-icon">📦</div>
+              <h3>Entrega</h3>
+              <p>Consulte a taxa pelo WhatsApp</p>
+              <span class="contact-highlight">Delivery rápido</span>
+            </div>
+          </div>
         </div>
       </section>
     </main>
 
-    <footer class="site-footer">© 2026 Açaí House Delivery</footer>
+    <footer class="site-footer">
+      <div class="container footer-content">
+        <div class="footer-brand">
+          <img src="img/logo.jpg" alt="Açaí House Delivery" class="footer-logo-img" />
+          <p>O melhor açaí da região, fresquinho na sua casa.</p>
+        </div>
+        <div class="footer-links">
+          <a href="#inicio">Início</a>
+          <a href="#cardapio">Cardápio</a>
+          <a href="#contato">Contato</a>
+        </div>
+        <div class="footer-copy">© 2026 Açaí House Delivery</div>
+      </div>
+    </footer>
 
     <a
       class="whatsapp-float"
+      id="whatsappFloat"
       href="https://wa.me/5579999049167"
       target="_blank"
       rel="noopener"
@@ -79,6 +106,21 @@
     >
 
     <div class="cart-overlay" id="cartOverlay"></div>
+
+    <!-- Modal de Personalização -->
+    <div class="custom-overlay" id="customOverlay"></div>
+    <div class="custom-modal" id="customModal">
+      <div class="modal-header">
+        <h3 id="modalTitle">Montar Açaí</h3>
+        <button id="modalClose" aria-label="Fechar">✕</button>
+      </div>
+      <div class="modal-body" id="modalBody"></div>
+      <div class="modal-footer">
+        <p class="modal-total-line">Total: <strong id="modalTotal">R$ 0,00</strong></p>
+        <button class="btn btn-cta modal-add-btn" id="modalAddBtn">Adicionar ao Carrinho</button>
+      </div>
+    </div>
+
     <aside class="cart-drawer" id="cartDrawer" aria-label="Carrinho de compras">
       <div class="cart-header">
         <h3>Seu carrinho</h3>

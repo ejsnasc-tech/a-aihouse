@@ -1,0 +1,788 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin — Açaí House</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;800&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --purple: #5c2d82;
+      --purple-dark: #3a1558;
+      --purple-light: #8b5fbf;
+      --green: #27ae60;
+      --green-dark: #1e8449;
+      --gold: #f5c518;
+      --white: #ffffff;
+      --bg: #f4f1f7;
+      --text: #2d2640;
+      --text-light: #6b5f7d;
+      --danger: #c0392b;
+      --radius: 14px;
+      --shadow: 0 4px 16px rgba(92,45,130,0.08);
+      --transition: 0.25s cubic-bezier(0.4,0,0.2,1);
+    }
+    * { box-sizing: border-box; margin: 0; }
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+    h1,h2,h3,h4 { font-family: 'Nunito', sans-serif; }
+
+    /* ═══ LOGIN ═══ */
+    .login-screen {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 20px;
+    }
+    .login-box {
+      background: var(--white);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 40px;
+      width: 100%;
+      max-width: 380px;
+      text-align: center;
+    }
+    .login-box h1 { font-size: 1.5rem; margin-bottom: 8px; color: var(--purple); }
+    .login-box p { color: var(--text-light); font-size: 0.9rem; margin-bottom: 24px; }
+    .login-box input {
+      width: 100%;
+      padding: 14px;
+      border: 2px solid #e0d5e8;
+      border-radius: 12px;
+      font-size: 1rem;
+      font-family: inherit;
+      transition: border-color var(--transition);
+    }
+    .login-box input:focus { outline: none; border-color: var(--purple); }
+    .login-box .btn { margin-top: 16px; width: 100%; }
+    .login-error { color: var(--danger); font-size: 0.85rem; margin-top: 10px; display: none; }
+
+    /* ═══ LAYOUT ═══ */
+    .admin-wrapper { display: none; }
+    .admin-header {
+      background: linear-gradient(135deg, var(--purple-dark), var(--purple));
+      color: var(--white);
+      padding: 18px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+    }
+    .admin-header h1 { font-size: 1.2rem; }
+    .admin-header .header-actions { display: flex; gap: 10px; }
+    .admin-body {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 24px 16px 80px;
+      display: grid;
+      gap: 24px;
+    }
+
+    /* ═══ CARDS ═══ */
+    .admin-card {
+      background: var(--white);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+    .card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 18px 20px;
+      background: #f9f6fc;
+      border-bottom: 1px solid #ede5f3;
+    }
+    .card-header h2 { font-size: 1.1rem; color: var(--purple); }
+    .card-body { padding: 20px; display: grid; gap: 16px; }
+
+    /* ═══ BUTTONS ═══ */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      border: 0;
+      border-radius: 12px;
+      padding: 12px 20px;
+      font-weight: 700;
+      font-family: inherit;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: all var(--transition);
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, var(--green), var(--green-dark));
+      color: var(--white);
+      box-shadow: 0 4px 12px rgba(39,174,96,0.25);
+    }
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(39,174,96,0.35); }
+    .btn-secondary {
+      background: #f3eef8;
+      color: var(--purple);
+    }
+    .btn-secondary:hover { background: #e8ddf0; }
+    .btn-danger {
+      background: #fdf0ef;
+      color: var(--danger);
+    }
+    .btn-danger:hover { background: #f9d5d1; }
+    .btn-sm { padding: 8px 14px; font-size: 0.82rem; border-radius: 10px; }
+    .btn-outline {
+      background: transparent;
+      border: 2px dashed #d1c4db;
+      color: var(--purple-light);
+    }
+    .btn-outline:hover { border-color: var(--purple); color: var(--purple); background: #faf8fc; }
+    .btn-logout {
+      background: rgba(255,255,255,0.12);
+      color: var(--white);
+      padding: 10px 16px;
+    }
+    .btn-logout:hover { background: rgba(255,255,255,0.25); }
+
+    /* ═══ FORM ELEMENTS ═══ */
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+    }
+    @media (min-width: 600px) {
+      .form-row-2 { grid-template-columns: 1fr 1fr; }
+      .form-row-3 { grid-template-columns: 2fr 1fr 1fr; }
+      .form-row-4 { grid-template-columns: 2fr 1fr 1fr auto; }
+    }
+    .form-group { display: grid; gap: 4px; }
+    .form-group label {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--text-light);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .form-group input,
+    .form-group select {
+      padding: 12px;
+      border: 2px solid #e0d5e8;
+      border-radius: 10px;
+      font-size: 0.92rem;
+      font-family: inherit;
+      transition: border-color var(--transition);
+    }
+    .form-group input:focus,
+    .form-group select:focus {
+      outline: none;
+      border-color: var(--purple);
+    }
+
+    /* ═══ PRODUCT / ITEM ROW ═══ */
+    .item-row {
+      display: flex;
+      align-items: flex-end;
+      gap: 10px;
+      padding: 14px;
+      background: #faf8fc;
+      border-radius: 12px;
+      border: 1px solid #ede5f3;
+      flex-wrap: wrap;
+    }
+    .item-row .form-group { flex: 1; min-width: 120px; }
+    .item-row .form-group.small { flex: 0 0 100px; min-width: 80px; }
+    .item-row .form-group.tiny { flex: 0 0 70px; min-width: 60px; }
+
+    /* ═══ VARIATION BLOCK ═══ */
+    .variation-block {
+      border: 2px solid #ede5f3;
+      border-radius: var(--radius);
+      overflow: hidden;
+      background: #fdfcfe;
+    }
+    .variation-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 16px;
+      background: #f3eef8;
+      cursor: pointer;
+      gap: 8px;
+    }
+    .variation-header h3 {
+      font-size: 0.95rem;
+      color: var(--purple);
+      flex: 1;
+    }
+    .variation-name-input {
+      flex: 1;
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--purple);
+      background: transparent;
+      border: 1px dashed transparent;
+      border-radius: 6px;
+      padding: 4px 8px;
+      transition: all 0.2s;
+      font-family: inherit;
+    }
+    .variation-name-input:hover {
+      border-color: rgba(92,45,130,0.3);
+      background: rgba(255,255,255,0.6);
+    }
+    .variation-name-input:focus {
+      outline: none;
+      border-color: var(--purple);
+      background: var(--white);
+      box-shadow: 0 0 0 3px rgba(92,45,130,0.1);
+    }
+    .variation-header .badge {
+      font-size: 0.75rem;
+      padding: 3px 10px;
+      border-radius: 999px;
+      background: var(--purple);
+      color: var(--white);
+      font-weight: 700;
+    }
+    .variation-body {
+      padding: 16px;
+      display: grid;
+      gap: 12px;
+    }
+    .variation-config {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+    }
+    @media (min-width: 600px) {
+      .variation-config { grid-template-columns: 1fr 1fr 1fr; }
+    }
+
+    .option-row {
+      display: flex;
+      align-items: flex-end;
+      gap: 8px;
+      padding: 10px;
+      background: var(--white);
+      border-radius: 10px;
+      border: 1px solid #ede5f3;
+    }
+    .option-row .form-group { flex: 1; }
+    .option-row .form-group.price-group { flex: 0 0 110px; }
+
+    .options-list { display: grid; gap: 8px; }
+
+    /* ═══ TOAST / SAVE BAR ═══ */
+    .save-bar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: var(--purple-dark);
+      color: var(--white);
+      padding: 14px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      z-index: 200;
+      transform: translateY(100%);
+      transition: transform var(--transition);
+      box-shadow: 0 -4px 20px rgba(0,0,0,0.15);
+    }
+    .save-bar.visible { transform: translateY(0); }
+    .save-bar span { font-weight: 600; }
+
+    .toast {
+      position: fixed;
+      top: 80px;
+      right: 20px;
+      background: var(--green);
+      color: var(--white);
+      padding: 14px 24px;
+      border-radius: 12px;
+      font-weight: 700;
+      box-shadow: 0 8px 24px rgba(39,174,96,0.3);
+      z-index: 300;
+      transform: translateX(120%);
+      transition: transform 0.4s cubic-bezier(0.4,0,0.2,1);
+    }
+    .toast.show { transform: translateX(0); }
+
+    /* ═══ EMPTY STATE ═══ */
+    .empty-state {
+      text-align: center;
+      padding: 24px;
+      color: var(--text-light);
+      font-size: 0.9rem;
+    }
+
+    /* ═══ PASSWORD FIELD ═══ */
+    .password-section {
+      margin-top: 12px;
+      padding-top: 12px;
+      border-top: 1px solid #ede5f3;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- LOGIN SCREEN -->
+  <div class="login-screen" id="loginScreen">
+    <div class="login-box">
+      <h1>🍇 Painel Admin</h1>
+      <p>Açaí House Delivery</p>
+      <input type="password" id="loginPassword" placeholder="Senha de acesso" autofocus />
+      <button class="btn btn-primary" id="loginBtn">Entrar</button>
+      <p class="login-error" id="loginError">Senha incorreta</p>
+    </div>
+  </div>
+
+  <!-- ADMIN PANEL -->
+  <div class="admin-wrapper" id="adminWrapper">
+    <header class="admin-header">
+      <h1>🍇 Admin — Açaí House</h1>
+      <div class="header-actions">
+        <a href="index.html" target="_blank" class="btn btn-logout">👁 Ver Site</a>
+        <button class="btn btn-logout" id="logoutBtn">Sair</button>
+      </div>
+    </header>
+
+    <div class="admin-body">
+
+      <!-- PRODUTOS -->
+      <div class="admin-card">
+        <div class="card-header">
+          <h2>🍧 Produtos</h2>
+          <button class="btn btn-secondary btn-sm" id="addProductBtn">+ Adicionar</button>
+        </div>
+        <div class="card-body" id="productsContainer"></div>
+      </div>
+
+      <!-- VARIAÇÕES -->
+      <div class="admin-card">
+        <div class="card-header">
+          <h2>🎨 Variações / Personalizações</h2>
+          <button class="btn btn-secondary btn-sm" id="addVariationBtn">+ Nova Variação</button>
+        </div>
+        <div class="card-body" id="variationsContainer"></div>
+      </div>
+
+      <!-- CONFIG -->
+      <div class="admin-card">
+        <div class="card-header">
+          <h2>⚙️ Configurações</h2>
+        </div>
+        <div class="card-body">
+          <div class="form-row form-row-2">
+            <div class="form-group">
+              <label>WhatsApp (só números com DDD)</label>
+              <input type="text" id="cfgWhatsapp" placeholder="5579999049167" />
+            </div>
+            <div class="form-group">
+              <label>Horário de funcionamento</label>
+              <input type="text" id="cfgHorario" placeholder="13h às 21h" />
+            </div>
+          </div>
+          <div class="password-section">
+            <div class="form-row form-row-2">
+              <div class="form-group">
+                <label>Nova senha admin (deixe vazio para manter)</label>
+                <input type="password" id="cfgSenha" placeholder="••••••" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- SAVE BAR -->
+    <div class="save-bar" id="saveBar">
+      <span>Alterações não salvas</span>
+      <button class="btn btn-primary" id="saveBtn">💾 Salvar Tudo</button>
+    </div>
+  </div>
+
+  <!-- TOAST -->
+  <div class="toast" id="toast">Salvo com sucesso!</div>
+
+  <script>
+    /* ═══════════════════════════════════════════
+       ADMIN PANEL — Açaí House
+       ═══════════════════════════════════════════ */
+
+    const ADMIN_STORAGE = 'acaihouse_admin_v1';
+    const ADMIN_PASS_KEY = 'acaihouse_admin_pass';
+    const DEFAULT_PASS = 'acai2026';
+
+    let config = loadConfig();
+    let dirty = false;
+
+    // ═══ AUTH ═══
+    const loginScreen = document.getElementById('loginScreen');
+    const adminWrapper = document.getElementById('adminWrapper');
+    const loginBtn = document.getElementById('loginBtn');
+    const loginPassword = document.getElementById('loginPassword');
+    const loginError = document.getElementById('loginError');
+    const logoutBtn = document.getElementById('logoutBtn');
+
+    // Auto-login if session is active
+    if (sessionStorage.getItem('acai_admin_auth') === '1') {
+      showAdmin();
+    }
+
+    loginBtn.addEventListener('click', tryLogin);
+    loginPassword.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') tryLogin();
+    });
+    logoutBtn.addEventListener('click', () => {
+      sessionStorage.removeItem('acai_admin_auth');
+      location.reload();
+    });
+
+    function tryLogin() {
+      const savedPass = localStorage.getItem(ADMIN_PASS_KEY) || DEFAULT_PASS;
+      if (loginPassword.value === savedPass) {
+        sessionStorage.setItem('acai_admin_auth', '1');
+        showAdmin();
+      } else {
+        loginError.style.display = 'block';
+        loginPassword.value = '';
+        loginPassword.focus();
+      }
+    }
+
+    function showAdmin() {
+      loginScreen.style.display = 'none';
+      adminWrapper.style.display = 'block';
+      initAdmin();
+    }
+
+    // ═══ INIT ═══
+    function initAdmin() {
+      renderProducts();
+      renderVariations();
+      loadSettings();
+
+      document.getElementById('addProductBtn').addEventListener('click', () => {
+        config.products.push({
+          id: 'produto-' + Date.now(),
+          emoji: '🍧',
+          name: '',
+          description: '',
+          price: 0,
+        });
+        renderProducts();
+        markDirty();
+      });
+
+      document.getElementById('addVariationBtn').addEventListener('click', () => {
+        config.variations.push({
+          id: 'var-' + Date.now(),
+          name: '',
+          min: 0,
+          max: 1,
+          type: 'checkbox',
+          options: [],
+        });
+        renderVariations();
+        markDirty();
+      });
+
+      document.getElementById('saveBtn').addEventListener('click', saveAll);
+
+      // Track changes on settings inputs
+      ['cfgWhatsapp', 'cfgHorario', 'cfgSenha'].forEach((id) => {
+        document.getElementById(id).addEventListener('input', markDirty);
+      });
+    }
+
+    // ═══ PRODUCTS ═══
+    function renderProducts() {
+      const container = document.getElementById('productsContainer');
+
+      if (config.products.length === 0) {
+        container.innerHTML = '<div class="empty-state">Nenhum produto cadastrado</div>';
+        return;
+      }
+
+      container.innerHTML = config.products.map((p, i) => `
+        <div class="item-row" data-product-index="${i}">
+          <div class="form-group tiny">
+            <label>Emoji</label>
+            <input type="text" value="${esc(p.emoji)}" data-field="emoji" maxlength="4" />
+          </div>
+          <div class="form-group">
+            <label>Nome</label>
+            <input type="text" value="${esc(p.name)}" data-field="name" placeholder="Açaí P" />
+          </div>
+          <div class="form-group">
+            <label>Descrição</label>
+            <input type="text" value="${esc(p.description)}" data-field="description" placeholder="Açaí cremoso" />
+          </div>
+          <div class="form-group small">
+            <label>Preço (R$)</label>
+            <input type="number" value="${p.price}" data-field="price" step="0.5" min="0" />
+          </div>
+          <button class="btn btn-danger btn-sm remove-product-btn" title="Remover">✕</button>
+        </div>
+      `).join('');
+
+      container.querySelectorAll('.item-row').forEach((row) => {
+        const idx = parseInt(row.dataset.productIndex);
+        row.querySelectorAll('input').forEach((input) => {
+          input.addEventListener('input', () => {
+            const field = input.dataset.field;
+            config.products[idx][field] = field === 'price' ? parseFloat(input.value) || 0 : input.value;
+            markDirty();
+          });
+        });
+        row.querySelector('.remove-product-btn').addEventListener('click', () => {
+          config.products.splice(idx, 1);
+          renderProducts();
+          markDirty();
+        });
+      });
+    }
+
+    // ═══ VARIATIONS ═══
+    function renderVariations() {
+      const container = document.getElementById('variationsContainer');
+
+      if (config.variations.length === 0) {
+        container.innerHTML = '<div class="empty-state">Nenhuma variação cadastrada</div>';
+        return;
+      }
+
+      container.innerHTML = config.variations.map((v, vi) => `
+        <div class="variation-block" data-var-index="${vi}">
+          <div class="variation-header">
+            <input type="text" class="variation-name-input" value="${esc(v.name)}" data-vfield="name" placeholder="Nome da variação" />
+            <span class="badge">${v.options.length} opções</span>
+            <span class="toggle-icon" style="font-size:0.8rem;color:var(--purple);opacity:0.5;">▼</span>
+          </div>
+          <div class="variation-body">
+            <div class="variation-config">
+              <div class="form-group">
+                <label>Tipo</label>
+                <select data-vfield="type">
+                  <option value="checkbox" ${v.type === 'checkbox' ? 'selected' : ''}>Múltipla escolha</option>
+                  <option value="radio" ${v.type === 'radio' ? 'selected' : ''}>Escolha única</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Mín.</label>
+                <input type="number" value="${v.min}" data-vfield="min" min="0" />
+              </div>
+              <div class="form-group">
+                <label>Máx.</label>
+                <input type="number" value="${v.max}" data-vfield="max" min="1" />
+              </div>
+            </div>
+
+            <div class="options-list" data-options-for="${vi}">
+              ${v.options.map((opt, oi) => `
+                <div class="option-row" data-opt-index="${oi}">
+                  <div class="form-group">
+                    <label>Opção</label>
+                    <input type="text" value="${esc(opt.name)}" data-ofield="name" placeholder="Nome da opção" />
+                  </div>
+                  <div class="form-group price-group">
+                    <label>Preço (R$)</label>
+                    <input type="number" value="${opt.price}" data-ofield="price" step="0.5" min="0" />
+                  </div>
+                  <button class="btn btn-danger btn-sm remove-opt-btn" title="Remover">✕</button>
+                </div>
+              `).join('')}
+            </div>
+
+            <div style="display:flex;gap:10px;flex-wrap:wrap;">
+              <button class="btn btn-outline btn-sm add-option-btn">+ Adicionar Opção</button>
+              <button class="btn btn-danger btn-sm remove-var-btn" style="margin-left:auto;">🗑 Remover Variação</button>
+            </div>
+          </div>
+        </div>
+      `).join('');
+
+      // Bind events
+      container.querySelectorAll('.variation-block').forEach((block) => {
+        const vi = parseInt(block.dataset.varIndex);
+
+        // Variation fields
+        block.querySelectorAll('[data-vfield]').forEach((input) => {
+          input.addEventListener('input', () => {
+            const field = input.dataset.vfield;
+            if (field === 'min' || field === 'max') {
+              config.variations[vi][field] = parseInt(input.value) || 0;
+            } else {
+              config.variations[vi][field] = input.value;
+            }
+            markDirty();
+          });
+          input.addEventListener('change', () => {
+            if (input.dataset.vfield === 'type') {
+              config.variations[vi].type = input.value;
+              markDirty();
+            }
+          });
+        });
+
+        // Option fields
+        block.querySelectorAll('.option-row').forEach((optRow) => {
+          const oi = parseInt(optRow.dataset.optIndex);
+          optRow.querySelectorAll('[data-ofield]').forEach((input) => {
+            input.addEventListener('input', () => {
+              const field = input.dataset.ofield;
+              config.variations[vi].options[oi][field] = field === 'price' ? parseFloat(input.value) || 0 : input.value;
+              markDirty();
+            });
+          });
+          optRow.querySelector('.remove-opt-btn').addEventListener('click', () => {
+            config.variations[vi].options.splice(oi, 1);
+            renderVariations();
+            markDirty();
+          });
+        });
+
+        // Add option
+        block.querySelector('.add-option-btn').addEventListener('click', () => {
+          config.variations[vi].options.push({
+            id: 'opt-' + Date.now(),
+            name: '',
+            price: 0,
+          });
+          renderVariations();
+          markDirty();
+        });
+
+        // Remove variation
+        block.querySelector('.remove-var-btn').addEventListener('click', () => {
+          if (confirm(`Remover a variação "${config.variations[vi].name || 'sem nome'}"?`)) {
+            config.variations.splice(vi, 1);
+            renderVariations();
+            markDirty();
+          }
+        });
+
+        // Toggle header (only on badge/icon click, not on name input)
+        block.querySelector('.variation-header').addEventListener('click', (e) => {
+          if (e.target.classList.contains('variation-name-input')) return;
+          const body = block.querySelector('.variation-body');
+          body.style.display = body.style.display === 'none' ? 'grid' : 'none';
+        });
+      });
+    }
+
+    // ═══ SETTINGS ═══
+    function loadSettings() {
+      document.getElementById('cfgWhatsapp').value = config.settings.whatsapp || '5579999049167';
+      document.getElementById('cfgHorario').value = config.settings.horario || '13h às 21h';
+    }
+
+    // ═══ SAVE ═══
+    function saveAll() {
+      // Update settings
+      config.settings.whatsapp = document.getElementById('cfgWhatsapp').value.trim();
+      config.settings.horario = document.getElementById('cfgHorario').value.trim();
+
+      // Generate IDs for items missing them
+      config.products.forEach((p, i) => {
+        if (!p.id) p.id = 'prod-' + Date.now() + '-' + i;
+      });
+      config.variations.forEach((v, vi) => {
+        if (!v.id) v.id = 'var-' + Date.now() + '-' + vi;
+        v.options.forEach((opt, oi) => {
+          if (!opt.id) opt.id = 'opt-' + Date.now() + '-' + vi + '-' + oi;
+        });
+      });
+
+      // Save config
+      localStorage.setItem(ADMIN_STORAGE, JSON.stringify(config));
+
+      // Save password if changed
+      const newPass = document.getElementById('cfgSenha').value.trim();
+      if (newPass.length > 0) {
+        localStorage.setItem(ADMIN_PASS_KEY, newPass);
+        document.getElementById('cfgSenha').value = '';
+      }
+
+      dirty = false;
+      document.getElementById('saveBar').classList.remove('visible');
+
+      // Show toast
+      const toast = document.getElementById('toast');
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 2500);
+
+      // Re-render to refresh IDs
+      renderProducts();
+      renderVariations();
+    }
+
+    // ═══ HELPERS ═══
+    function markDirty() {
+      if (!dirty) {
+        dirty = true;
+        document.getElementById('saveBar').classList.add('visible');
+      }
+    }
+
+    function loadConfig() {
+      try {
+        const saved = JSON.parse(localStorage.getItem(ADMIN_STORAGE));
+        if (saved && saved.products) return saved;
+      } catch (e) {}
+
+      // Default config
+      return {
+        products: [
+          { id: 'acai-p', emoji: '🍧', name: 'Açaí P', description: 'Açaí cremoso batido na hora', price: 15 },
+          { id: 'acai-m', emoji: '🍧', name: 'Açaí M', description: 'Açaí cremoso batido na hora', price: 20 },
+          { id: 'acai-g', emoji: '🍧', name: 'Açaí G', description: 'Açaí cremoso batido na hora', price: 24 },
+          { id: 'acai-gg', emoji: '🍧', name: 'Açaí Gg', description: 'O maior e mais completo', price: 28 },
+        ],
+        variations: [
+          { id: 'creme', name: 'Creme', min: 0, max: 1, type: 'checkbox', options: [] },
+          { id: 'caldas', name: 'Caldas', min: 0, max: 1, type: 'checkbox', options: [] },
+          { id: 'complementos', name: 'Complementos', min: 1, max: 4, type: 'checkbox', options: [] },
+          { id: 'adicionais', name: 'Adicionais', min: 0, max: 28, type: 'checkbox', options: [] },
+          { id: 'colher', name: 'Colher', min: 1, max: 1, type: 'radio', options: [
+            { id: 'colher-sim', name: 'Sim', price: 0 },
+            { id: 'colher-nao', name: 'Não', price: 0 },
+          ]},
+          { id: 'dentro-separado', name: 'Dentro ou Separado', min: 1, max: 1, type: 'radio', options: [
+            { id: 'dentro', name: 'Dentro', price: 0 },
+            { id: 'separado', name: 'Separado', price: 0 },
+          ]},
+        ],
+        settings: {
+          whatsapp: '5579999049167',
+          horario: '13h às 21h',
+        },
+      };
+    }
+
+    function esc(str) {
+      const div = document.createElement('div');
+      div.textContent = str || '';
+      return div.innerHTML.replace(/"/g, '&quot;');
+    }
+
+    // Warn before leaving with unsaved changes
+    window.addEventListener('beforeunload', (e) => {
+      if (dirty) {
+        e.preventDefault();
+        e.returnValue = '';
+      }
+    });
+  </script>
+</body>
+</html>
